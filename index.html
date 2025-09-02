@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AppSec Investigation Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>AppSec Investigation Calculator</h1>
+      <p class="subtitle">Scanners detect many potential issues, but they require risk validation to justify a fix. Use this calculator to estimate the amount of time your team spends on invesigation to validate the risk of scanner-detected findings.</p>
+    </header>
+
+    <main class="container">
+      <div class="layout">
+        <div class="layout-left">
+          <h2 class="panel-title">AppSec Investigation Overview</h2>
+          <section class="summary" aria-live="polite">
+            <div class="summary-item">
+              <div class="summary-label">Expected time per issue</div>
+              <div class="summary-value"><span id="totalMinutes">0</span> min</div>
+            </div>
+            <div class="summary-item" id="spendCard">
+              <div class="summary-label">Total AppSec investigation spend</div>
+              <div class="summary-value" id="spendValue">$0</div>
+            </div>
+            <div class="summary-item" id="roiCard">
+              <div class="summary-label">ROI with Jit (monthly)</div>
+              <div class="summary-value" id="roiValue">$0</div>
+              <div class="roi-bar"><div class="roi-fill" id="roiFill"></div></div>
+            </div>
+          </section>
+
+          <section id="fpSummary" class="sensitivity">
+            <div class="sensitivity-header">
+              <div class="sensitivity-title">Time spent investigating false positives vs real issues</div>
+            </div>
+            <div class="fp-split">
+              <div class="fp-legend"><span class="dot fp-dot-fp"></span> False positives <span id="fpMinutesLabel">0 min</span> · <span class="dot fp-dot-real"></span> Real risks <span id="realMinutesLabel">0 min</span></div>
+              <div class="fp-bar">
+                <div class="fp-fill-fp" id="fpFillFp" style="width: 0%"></div>
+                <div class="fp-fill-real" id="fpFillReal" style="width: 0%"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="stageDonut" class="sensitivity">
+            <div class="sensitivity-header">
+              <div class="sensitivity-title">Time spent per stage breakdown</div>
+            </div>
+            <canvas id="donutCanvas" width="280" height="280" aria-label="Stage time donut" role="img"></canvas>
+            <div id="stageLegend" class="stage-legend"></div>
+          </section>
+        </div>
+
+        <div class="layout-right">
+          <h2 class="panel-title">Inputs</h2>
+          <section id="inputsPanel" class="sensitivity">
+            <div class="fp-row"><label>Investigated issues per month <input id="issuesPerMonth" type="number" min="0" step="1" value="100"></label></div>
+            <div class="fp-row"><label>Average AppSec Engineer hourly rate <input id="hourlyRate" type="number" min="0" step="1" value="150"></label></div>
+            <div class="fp-row">
+              <label class="switch">
+                <input id="jitToggle" type="checkbox" aria-label="With Jit's Security Evaluation and Remediation Agent">
+                <span class="switch-label">With Jit's Security Evaluation and Remediation Agent</span>
+              </label>
+            </div>
+          </section>
+
+          <section id="fpTracker" class="sensitivity">
+            <div class="sensitivity-header">
+              <div class="sensitivity-title">False positive analysis</div>
+            </div>
+            <p class="fp-explainer">Set what share of findings stop at each stage. Those portions represent false positives/time-wasters, while the remainder proceeds through the full path (real risks). The expected time combines both pathways.</p>
+            <div class="fp-row"><label>Triage stop % <input id="fpTriage" type="number" min="0" max="100" step="1" value="40"></label></div>
+            <div class="fp-row"><label>Confirm exploitability & impact stop % <input id="fpImpact" type="number" min="0" max="100" step="1" value="30"></label></div>
+            <div class="fp-row"><label>Reproduction stop % <input id="fpRepro" type="number" min="0" max="100" step="1" value="10"></label></div>
+            <div class="fp-row"><label>Investigation / RCA stop % <input id="fpRca" type="number" min="0" max="100" step="1" value="10"></label></div>
+            <div class="fp-note" id="fpNote"></div>
+          </section>
+
+          <section id="groupsContainer" class="groups"></section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <span>v1 • Calculator with Jit mode, ROI, FP analysis, custom tasks, and donut</span>
+    </footer>
+
+    <script src="script.js?v=9"></script>
+  </body>
+</html>
